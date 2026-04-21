@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>跨场景少样本无线信道建模 | 项目主页</title>
+  <meta name="description" content="跨场景少样本无线信道建模与类比适配项目主页：代表性源场景构建、CSI/CIR 双视图预训练、支持样本驱动类比适配与轻量策略优化。" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <button class="mobile-menu" id="mobileMenu" aria-label="打开导航">☰</button>
+
+  <aside class="profile" id="profilePanel">
+    <div class="profile-inner">
+      <div class="avatar-wrap">
+        <div class="avatar-glow"></div>
+        <div class="avatar" aria-hidden="true">
+          <svg viewBox="0 0 160 160" role="img">
+            <defs>
+              <linearGradient id="avatarGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#dbeafe"/>
+                <stop offset="55%" stop-color="#bfdbfe"/>
+                <stop offset="100%" stop-color="#f1f5f9"/>
+              </linearGradient>
+            </defs>
+            <circle cx="80" cy="80" r="78" fill="url(#avatarGradient)"/>
+            <path d="M37 111c12-23 70-23 86 0" fill="#475569" opacity=".25"/>
+            <circle cx="80" cy="66" r="30" fill="#64748b" opacity=".28"/>
+            <path d="M41 114c13-26 66-26 78 0" fill="#334155" opacity=".18"/>
+            <text x="80" y="91" text-anchor="middle" font-size="38" font-family="Inter,Arial,sans-serif" font-weight="800" fill="#1e3a8a">WJB</text>
+          </svg>
+        </div>
+      </div>
+      <p class="eyebrow">Project Page</p>
+      <h1>跨场景少样本<br/>无线信道建模</h1>
+      <p class="role">Cross-Scenario Few-Shot Wireless Channel Modeling</p>
+      <p class="affiliation">王嘉贝 · Shanghai University</p>
+      <div class="profile-links" aria-label="项目链接">
+        <a href="https://github.com/accuseoneee/wireless_pretrain" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="#paper">Paper</a>
+        <a href="#results">Results</a>
+      </div>
+      <div class="mini-stat">
+        <span>核心任务</span>
+        <strong>few-shot target adaptation</strong>
+      </div>
+      <div class="mini-stat">
+        <span>数据基础</span>
+        <strong>DeepMIMO multi-scenario CSI</strong>
+      </div>
+      <nav class="side-nav" aria-label="页面导航">
+        <a href="#about" class="nav-link active">项目概览</a>
+        <a href="#idea" class="nav-link">研究问题</a>
+        <a href="#method" class="nav-link">方法框架</a>
+        <a href="#results" class="nav-link">实验结果</a>
+        <a href="#evidence" class="nav-link">实验包证据</a>
+        <a href="#paper" class="nav-link">论文与代码</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="hero section" id="about">
+      <div class="hero-top">
+        <p class="section-kicker">About this project</p>
+        <div class="reading-switch" role="group" aria-label="阅读模式">
+          <button class="switch-btn active" data-mode="quick">1 分钟</button>
+          <button class="switch-btn" data-mode="deep">深入版</button>
+        </div>
+      </div>
+      <h2>让无线信道模型在新场景中，只用少量样本就能快速适配。</h2>
+      <p class="lead quick-copy">本项目研究跨场景少样本无线信道建模：不再只依赖单一场景的大量标注数据，而是构建代表性源场景、学习可迁移信道表征，并通过支持样本驱动的类比适配完成目标场景快速建模。</p>
+      <p class="deep-copy muted">核心动机是现实部署中的场景变化：传播环境、空间几何、反射/遮挡关系和 CSI 分布都会改变。如果每换一个场景都重新采集大量数据并完整训练模型，部署成本会很高。因此，本项目把问题拆成“源场景如何组织、表征如何预训练、目标少样本如何使用、适配策略如何自动选择”四个连续环节。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#results">查看核心结果</a>
+        <a class="btn ghost" href="#method">理解方法框架</a>
+        <button class="btn subtle" id="copyPitch">复制 30 秒介绍</button>
+      </div>
+      <div class="notice-card">
+        <strong>一句话贡献</strong>
+        <span>一个面向低成本部署的 cross-scenario few-shot pipeline：代表性源场景构建 → CSI/CIR 双视图预训练 → support-driven analogical adaptation → lightweight strategy optimization。</span>
+      </div>
+    </section>
+
+    <section class="section" id="idea">
+      <p class="section-kicker">Research question</p>
+      <h2 class="section-title">这个项目解决什么问题？</h2>
+      <div class="two-column">
+        <article class="soft-card question-card">
+          <span class="card-number">01</span>
+          <h3>无线场景变化很快</h3>
+          <p>单场景训练的模型在新传播环境中容易失效，因为 CSI 分布、空间相关性和多径结构都会发生变化。</p>
+        </article>
+        <article class="soft-card question-card">
+          <span class="card-number">02</span>
+          <h3>目标场景标注很少</h3>
+          <p>实际部署时往往只有少量测量样本，直接 fine-tuning 容易过拟合，direct transfer 又缺乏局部适配能力。</p>
+        </article>
+        <article class="soft-card question-card">
+          <span class="card-number">03</span>
+          <h3>源场景不是越多越好</h3>
+          <p>不同源场景对目标任务的帮助不同，需要研究代表性源场景构建，而不是盲目聚合所有数据。</p>
+        </article>
+        <article class="soft-card question-card">
+          <span class="card-number">04</span>
+          <h3>support 样本质量很关键</h3>
+          <p>少样本适配不只取决于样本数量，还取决于 support set 是否覆盖目标区域的空间结构。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="method">
+      <div class="section-head-row">
+        <div>
+          <p class="section-kicker">Method</p>
+          <h2 class="section-title">四阶段方法链</h2>
+        </div>
+        <p class="section-note">点击每一步查看解释。默认只保留教授最关心的要点。</p>
+      </div>
+
+      <div class="method-map" id="methodMap" aria-label="方法流程图">
+        <button class="method-step active" data-step="source">
+          <span>1</span>
+          <strong>代表性源场景</strong>
+          <small>source scenario construction</small>
+        </button>
+        <div class="flow-line"></div>
+        <button class="method-step" data-step="pretrain">
+          <span>2</span>
+          <strong>双视图预训练</strong>
+          <small>CSI / CIR representation</small>
+        </button>
+        <div class="flow-line"></div>
+        <button class="method-step" data-step="adapter">
+          <span>3</span>
+          <strong>类比式适配</strong>
+          <small>support-query relation</small>
+        </button>
+        <div class="flow-line"></div>
+        <button class="method-step" data-step="strategy">
+          <span>4</span>
+          <strong>轻量策略优化</strong>
+          <small>deployment tuning</small>
+        </button>
+      </div>
+
+      <div class="method-detail soft-card" id="methodDetail">
+        <div>
+          <p class="detail-label">Step 1</p>
+          <h3>代表性源场景构建</h3>
+          <p>根据场景统计特征、几何传播特征与潜在表征线索组织源场景，目标是在有限 source budget 下保留跨场景覆盖能力，减少冗余源数据带来的训练成本。</p>
+        </div>
+        <div class="detail-tags">
+          <span>source budget</span><span>scenario descriptor</span><span>cross-scenario coverage</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section visual-section">
+      <div class="visual-card">
+        <div class="wave-grid" aria-hidden="true">
+          <span style="--x:8%;--y:28%;--d:0s"></span>
+          <span style="--x:20%;--y:72%;--d:.3s"></span>
+          <span style="--x:34%;--y:46%;--d:.6s"></span>
+          <span style="--x:48%;--y:65%;--d:.2s"></span>
+          <span style="--x:57%;--y:30%;--d:.9s"></span>
+          <span style="--x:72%;--y:54%;--d:.4s"></span>
+          <span style="--x:86%;--y:38%;--d:.7s"></span>
+        </div>
+        <div class="visual-copy">
+          <p class="section-kicker">Core intuition</p>
+          <h2>少样本不是只看“多少个点”，而是看这些点是否解释了目标区域。</h2>
+          <p>实验表明，clustered support 持续最差；random / diverse / proposed 明显更好。这说明 support samples 的空间覆盖会直接影响最终适配质量。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="results">
+      <div class="section-head-row">
+        <div>
+          <p class="section-kicker">Selected results</p>
+          <h2 class="section-title">教授优先看的 4 个结果</h2>
+        </div>
+        <div class="tab-buttons" role="tablist" aria-label="结果标签页">
+          <button class="tab-btn active" data-tab="adapter">Adapter</button>
+          <button class="tab-btn" data-tab="coverage">Coverage</button>
+          <button class="tab-btn" data-tab="source">Source</button>
+          <button class="tab-btn" data-tab="tuner">Tuner</button>
+        </div>
+      </div>
+
+      <div class="result-panel active" data-panel="adapter">
+        <div class="result-layout">
+          <div class="result-summary soft-card">
+            <p class="detail-label">Result A</p>
+            <h3>类比适配器是跨场景 few-shot 的关键模块</h3>
+            <p>多场景与 16-shot 强化实验显示，adapter-based adaptation 明显优于 direct transfer / no-adapter。pretrained 与 scratch adapter 接近，因此论文叙事应稳健聚焦在“adapter 必要性”而不是夸大“预训练显著增益”。</p>
+            <div class="evidence-strip"><span>package1</span><span>package5</span><span>30–0 vs no-adapter</span></div>
+          </div>
+          <div class="bar-card soft-card" aria-label="方法对比示意图">
+            <div class="bar-row"><span>Pretrained + Adapter</span><i style="--w:92%"></i></div>
+            <div class="bar-row"><span>Scratch + Adapter</span><i style="--w:89%"></i></div>
+            <div class="bar-row"><span>No Adapter</span><i style="--w:55%"></i></div>
+            <p class="chart-caption">示意：adapter 方法稳定优于 no-adapter；pretrained 与 scratch adapter 基本可比。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-panel" data-panel="coverage">
+        <div class="result-layout">
+          <div class="result-summary soft-card">
+            <p class="detail-label">Result B</p>
+            <h3>support coverage 与适配质量强相关</h3>
+            <p>package4 已完整封板，72/72 runs 收齐。16-shot 下 proposed 最优；64-shot 下 diverse 最优，proposed 接近最优；clustered 持续显著最差。</p>
+            <div class="evidence-strip"><span>72/72 runs</span><span>16-shot proposed best</span><span>clustered worst</span></div>
+          </div>
+          <div class="metric-grid soft-card">
+            <div><strong>52.53</strong><span>Proposed, 16-shot</span></div>
+            <div><strong>74.12</strong><span>Clustered, 16-shot</span></div>
+            <div><strong>50.78</strong><span>Proposed, 64-shot</span></div>
+            <div><strong>74.16</strong><span>Clustered, 64-shot</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-panel" data-panel="source">
+        <div class="result-layout">
+          <div class="result-summary soft-card">
+            <p class="detail-label">Result C</p>
+            <h3>代表性源场景构建补齐方法闭环</h3>
+            <p>package2 full-clean rerun 获得 192/192 个有效 finetune 结果。proposed source selection 在 64-shot 下平均最优，但优势温和，更适合作为“稳定且不损害性能”的贡献闭环证据。</p>
+            <div class="evidence-strip"><span>192/192 valid</span><span>source budget</span><span>competitive</span></div>
+          </div>
+          <div class="mini-table soft-card">
+            <div><b>Strategy</b><b>16-shot</b><b>64-shot</b></div>
+            <div><span>All-source</span><span>48.72</span><span>46.78</span></div>
+            <div><span>Random</span><span>48.71</span><span>46.76</span></div>
+            <div><span>Proposed</span><span>48.74</span><span>46.73</span></div>
+            <div><span>Heuristic</span><span>48.76</span><span>46.87</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-panel" data-panel="tuner">
+        <div class="result-layout">
+          <div class="result-summary soft-card">
+            <p class="detail-label">Result D</p>
+            <h3>轻量策略优化带来稳定小增益</h3>
+            <p>package3 中 proposed lightweight tuner 相对 default_fixed 有稳定小幅提升，适合作为部署阶段的辅助贡献，而不是主创新。</p>
+            <div class="evidence-strip"><span>18 cases</span><span>16/18 better than default</span><span>deployment-friendly</span></div>
+          </div>
+          <div class="metric-grid soft-card three">
+            <div><strong>51.946</strong><span>Proposed tuner</span></div>
+            <div><strong>51.947</strong><span>Random search</span></div>
+            <div><strong>52.289</strong><span>Default fixed</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="evidence">
+      <div class="section-head-row">
+        <div>
+          <p class="section-kicker">Evidence map</p>
+          <h2 class="section-title">实验包如何支撑论文主线</h2>
+        </div>
+        <div class="filter-buttons" aria-label="实验包筛选">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="main">主证据</button>
+          <button class="filter-btn" data-filter="aux">补强</button>
+        </div>
+      </div>
+
+      <div class="package-grid">
+        <article class="package-card" data-type="main" data-modal="pkg1">
+          <span class="pkg-label">Package 1</span>
+          <h3>真实 cross-scenario few-shot 协议</h3>
+          <p>支撑标题里的 cross-scenario，不再只停留在单场景 region split。</p>
+          <button>查看作用</button>
+        </article>
+        <article class="package-card" data-type="aux" data-modal="pkg2">
+          <span class="pkg-label">Package 2</span>
+          <h3>代表性源场景构建</h3>
+          <p>验证 proposed source selection 在有限 source budget 下稳定可用。</p>
+          <button>查看作用</button>
+        </article>
+        <article class="package-card" data-type="aux" data-modal="pkg3">
+          <span class="pkg-label">Package 3</span>
+          <h3>轻量策略优化</h3>
+          <p>提供部署层面的策略调参证据，作为辅助贡献。</p>
+          <button>查看作用</button>
+        </article>
+        <article class="package-card" data-type="main" data-modal="pkg4">
+          <span class="pkg-label">Package 4</span>
+          <h3>Support coverage 主证据</h3>
+          <p>clustered 持续最差，证明 support 空间覆盖对适配质量很关键。</p>
+          <button>查看作用</button>
+        </article>
+        <article class="package-card" data-type="main" data-modal="pkg5">
+          <span class="pkg-label">Package 5</span>
+          <h3>16-shot 稳健性强化</h3>
+          <p>进一步证明 adapter 必要性，prediction-level 图可作为补强证据。</p>
+          <button>查看作用</button>
+        </article>
+        <article class="package-card" data-type="aux" data-modal="pkg6">
+          <span class="pkg-label">Package 6</span>
+          <h3>论文图表组织</h3>
+          <p>把结果转成 CDF、spatial error map、scatter 和主表。</p>
+          <button>查看作用</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="paper">
+      <p class="section-kicker">Paper & code</p>
+      <h2 class="section-title">论文、代码与复现入口</h2>
+      <div class="paper-card soft-card">
+        <div>
+          <h3>Cross-Scenario Few-Shot Wireless Channel Modeling with Analogical Adaptation</h3>
+          <p>Manuscript in preparation. 论文围绕低成本目标场景建模展开，强调 adapter-based analogical adaptation、representative source construction、support coverage 和 lightweight strategy optimization 的完整证据链。</p>
+          <div class="link-row">
+            <a href="https://github.com/accuseoneee/wireless_pretrain" target="_blank" rel="noreferrer">Code</a>
+            <a href="#" title="发布前替换为论文 PDF 地址">PDF</a>
+            <a href="#" title="发布前替换为数据说明或结果页">Results</a>
+          </div>
+        </div>
+        <button class="copy-cite" id="copyCitation">复制 BibTeX</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2026 Wang Jiabei. Academic project page for wireless AI research.</p>
+      <a href="#about">Back to top ↑</a>
+    </footer>
+  </main>
+
+  <div class="modal" id="pkgModal" aria-hidden="true" role="dialog" aria-label="实验包详情">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <button class="modal-close" data-close="true" aria-label="关闭">×</button>
+      <p class="detail-label" id="modalLabel">Package</p>
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalBody">Body</p>
+      <div class="modal-tags" id="modalTags"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">已复制</div>
+  <script src="assets/script.js"></script>
+</body>
+</html>
